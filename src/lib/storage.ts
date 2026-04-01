@@ -186,6 +186,23 @@ export function getTodayLipidEntry(): string | null {
   return entry ? entry.meal.name : null;
 }
 
+// --- Nocturnal Protein Shake ---
+
+export function hasTodayProteinShake(): boolean {
+  const log = getTodayLog();
+  return log.entries.some((e) =>
+    NOCTURNAL_ITEMS.some((n) => e.meal.name.includes(n))
+  );
+}
+
+export function registerProteinShake() {
+  const meals = getMeals();
+  const shake = meals.find((m) => m.name.includes('Batido proteína'));
+  const zma = meals.find((m) => m.name.includes('ZMA'));
+  if (shake) addLogEntry(shake);
+  if (zma) addLogEntry(zma);
+}
+
 // --- Day Complete ---
 
 const COMPLETED_DAYS_KEY = 'que-como-hoy-completed';

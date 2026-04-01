@@ -55,7 +55,6 @@ export const TIME_SLOTS: MealTimeSlot[] = [
   'almuerzo',
   'colacion_pm',
   'cena',
-  'colacion_nocturna',
 ];
 
 export const TIME_SLOT_LABELS: Record<MealTimeSlot, string> = {
