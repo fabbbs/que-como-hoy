@@ -22,6 +22,8 @@ import {
   hasTodayLipid,
   getLipidMeals,
   getTodayLipidEntry,
+  hasTodayProteinShake,
+  registerProteinShake,
   isTodayComplete,
   markDayComplete,
   unmarkDayComplete,
@@ -38,6 +40,7 @@ export default function Dashboard() {
   const [lipidName, setLipidName] = useState<string | null>(null);
   const [showLipidPicker, setShowLipidPicker] = useState(false);
   const [lipidMeals, setLipidMeals] = useState<Meal[]>([]);
+  const [hasShake, setHasShake] = useState(false);
   const [dayComplete, setDayComplete] = useState(false);
   const [toast, setToast] = useState<{ message: string; undoTimestamp?: string } | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -50,6 +53,7 @@ export default function Dashboard() {
     setHasLipid(hasTodayLipid());
     setLipidName(getTodayLipidEntry());
     setLipidMeals(getLipidMeals());
+    setHasShake(hasTodayProteinShake());
     setDayComplete(isTodayComplete());
   }, []);
 
@@ -113,6 +117,12 @@ export default function Dashboard() {
     refresh();
     setShowLipidPicker(false);
     showToast(`✅ ${meal.name} registrado`, new Date().toISOString());
+  };
+
+  const handleProteinShake = () => {
+    registerProteinShake();
+    refresh();
+    showToast('✅ Batido nocturno + ZMA registrado', new Date().toISOString());
   };
 
   const handleDayComplete = () => {
@@ -237,6 +247,30 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Protein shake */}
+      <button
+        onClick={() => !hasShake && handleProteinShake()}
+        disabled={hasShake}
+        className={`w-full rounded-xl p-3 shadow-sm border text-left transition-colors ${
+          hasShake
+            ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800'
+            : 'bg-purple-50 dark:bg-purple-900/30 border-purple-200 dark:border-purple-800 hover:border-purple-400'
+        }`}
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">🌙 Batido nocturno</p>
+            {hasShake ? (
+              <p className="text-sm font-medium text-green-600 dark:text-green-400">✅ Proteína + Creatina + ZMA</p>
+            ) : (
+              <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Toca para registrar · 130 kcal</p>
+            )}
+          </div>
+          {!hasShake && <span className="text-purple-400 text-lg">+</span>}
+        </div>
+        <p className="text-[10px] text-gray-400 mt-0.5">1 scoop proteína + creatina (7g) + ZMA 30 min antes de dormir</p>
+      </button>
 
       {/* Timeline */}
       <div>
